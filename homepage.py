@@ -2,7 +2,6 @@ import random
 import string
 from tkinter import *
 import webbrowser
-from wmi import *
 import pygame
 import keyboard
 #gui
@@ -169,28 +168,23 @@ passwordb.pack()
 #WEB BROWSER
 def searchonweb():
  #calculator_root
- Calculatorroot = Tk()
- #def
- def searchoninternet(url):
-     webbrowser.open_new_tab(url)
- #def open web tab
- search = Entry(Calculatorroot, text='Input url or search')
+ browser = Tk()
+ search = Entry (browser, text='Input url or search')
  search.pack()
+ #def search on internet
  def searchoninternet():
      x = "https://www.google.com/search?q=" + search.get()
      webbrowser.open_new_tab(x)
- searchb = Button(Calculatorroot, text='Search', command=searchoninternet)
+ #buttons and stuff
+ searchb = Button(browser, text='Search', command=searchoninternet)
  searchb.pack()
- Calculatorroot.mainloop()
-#web page packing
+ browser.mainloop()
+#web page pack
 websearchb = Button(initial_root, text='Search on the web', command=searchonweb)
 websearchb.pack()
-#STRESS TEST NOT WORKING
+#STRESS TEST (crashes, idk why)
 def stresstest():
-	stressroot = Tk()
-	for i in range(0, 99999):
-	    stresslab = Label(stressroot, text=i)
-	    stresslab.pack()
+    pass
 stresstestb = Button(initial_root, text='Stress test (not working, crashes)', command=stresstest)
 stresstestb.pack()
 #game
@@ -199,10 +193,11 @@ def gamestart():
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     class pl():
-        def __init__(self, x, y, speed):
+        def __init__(self, x, y, speed, yspeed):
             self.x = x
             self.y = y
             self.speed = speed
+            self.yspeed = yspeed
     class obj():
         def __init__(self, x, y, z):
             self.x = x
@@ -213,7 +208,7 @@ def gamestart():
         ent.append('a')
     for item in ent:
         item = obj(random.randint(0,1080), random.randint(0,720), random.randint(15, 45))
-    player = pl(0, 0, 1)
+    player = pl(0, 0, 1, 0)
     size = (1920, 1080)
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Lil' game")
@@ -263,6 +258,10 @@ def gamestart():
             player.x = 0
             player.y = 0
             player.speed = 1
+        gravity = True
+        if gravity:
+            player.y += player.yspeed
+            player.yspeed += 9.8 * (1/fps) * (1/25)
         #not to go outside the map
         if player.x < 0:
             player.x = 1920
@@ -284,6 +283,7 @@ def gamestart():
             player.y -= player.speed
             player.x = 0
             player.y = 0
+            player.yspeed = 0
         if player.speed < 0.25:
             player.speed = 1
         pygame.display.flip()
